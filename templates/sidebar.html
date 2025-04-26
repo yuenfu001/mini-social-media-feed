@@ -5,7 +5,9 @@
     {% for user in users %}
       <li class="list-group-item border-0">
         <i class="bi bi-person me-2"></i>
-        <a href="{% url 'check_profile' user.profile.id %}">
+        {% if user.is_authenticated and user.profile %}
+    <a href="{% url 'check_profile' user.profile.pk %}">View Profile</a>
+{% endif %}
           {% if user.first_name %}
             {{ user.first_name }} {{ user.last_name }}
           {% else %}
