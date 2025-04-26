@@ -1,3 +1,3 @@
-pip install requirements.txt
+uv pip install requirements.txt
 
 py manage.py collectstatic
