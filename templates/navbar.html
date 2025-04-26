@@ -1,0 +1,18 @@
+<nav class="navbar">
+  <div class="navbar-logo"><a href="{% url 'index' %}">Home</a></div>
+  {% if request.user.is_authenticated %}
+  <div class="navbar-links">
+    <a href="{% url 'profile' %}">{{request.user.first_name}} {{request.user.last_name}}'s Profile</a>
+    <a href="#">My Network</a>
+    <a href="#">Jobs</a>
+    <a href="#">Messages</a>
+    <a href="#">Notifications</a>
+   
+    <form action="{% url 'logout' %}" method="POST">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-link">Logout</button>
+    </form>
+      
+    {% endif %}
+  </div>
+</nav>

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Feed{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    
+    <!-- Sidebar -->
+    {% include "sidebar.html" %}
+    
+    <!-- Main Feed -->
+    <div class="col-md-9 offset-md-3 col-12 pt-4">
+      <button id="createPostBtn" class="create-post-btn">Create Post</button>
+
+      <!-- Modal and Posts -->
+      <div id="postModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Create a New Post</h2>
+          <form action="{% url 'index' %}" method="post" id="postForm">
+            {% csrf_token %}
+            {{ add_post.post }}
+            <button type="submit" class="post-submit-btn">Post</button>
+          </form>
+        </div>
+      </div>
+
+      {% for post in all %}
+        <div class="post mt-4">
+          <div class="post-header d-flex align-items-center position-relative">
+            {% if post.user_post.profile.profile_pic %}
+              <img src="{{ post.user_post.profile.profile_pic.url }}" alt="Avatar" class="avatar me-2">
+            {% endif %}
+            <div>
+              <strong>{{ post.user_post.first_name }} {{ post.user_post.last_name }}</strong><br>
+              <small>{{ post.date_modified|timesince }}</small>
+            </div>
+          
+            {% if post.user_post == user %}
+              <a href="{% url 'edit_post' post.id %}" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 mt-1 me-2">Edit</a>
+            {% endif %}
+          </div>
+          
+          
+          <div class="post-content mt-2">
+            {{ post.post }}
+          </div>
+          <div class="post-actions mt-2">
+            <button><a href="{% url 'like_post' post.id %}">Like</a></button> 
+            <button>Comment</button>
+            <button>Share</button>
+
+            <!-- Like Count Button That Opens Modal -->
+            <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#likesModal{{ post.id }}">
+              {{ post.likes.count }} likes
+            </button>
+
+          </div>
+
+          <!-- Modal for This Post -->
+          <div class="modal fade" id="likesModal{{ post.id }}" tabindex="-1" aria-labelledby="likesModalLabel{{ post.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content rounded-3">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="likesModalLabel{{ post.id }}">People who liked this post</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  {% if post.likes.all %}
+                    <ul class="list-group">
+                      {% for user in post.likes.all %}
+                        <li class="list-group-item d-flex align-items-center">
+                          {% if user.profile.profile_pic %}
+                            <img src="{{ user.profile.profile_pic.url }}" alt="Avatar" class="rounded-circle me-2" style="width: 30px; height: 30px;">
+                          {% endif %}
+                          {{ user.get_full_name|default:user.username }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <p>No likes yet.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS (make sure this is included if not in base.html) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Get modal element
+  const modal = document.getElementById("postModal");
+  const createPostBtn = document.getElementById("createPostBtn");
+  const closeModalBtn = document.getElementsByClassName("close")[0];
+
+  // Show modal
+  createPostBtn.onclick = function() {
+    modal.style.display = "block";
+  }
+
+  // Close modal
+  closeModalBtn.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // Close modal if clicked outside
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+{% endblock %}

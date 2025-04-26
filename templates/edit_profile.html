@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow p-4" style="max-width: 600px; width: 100%;">
+        <h3 class="text-center mb-4">Edit Your Profile</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- User Details (Inline) -->
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label mr-2"><strong>User:</strong></label>
+                <span>{{ update_user.username }}</span>
+            </div>
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label mr-2"><strong>First Name:</strong></label>
+                <span>{{ update_user.first_name }}</span>
+            </div>
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label mr-2"><strong>Last Name:</strong></label>
+                <span>{{ update_user.last_name }}</span>
+            </div>
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label mr-2"><strong>Email:</strong></label>
+                <span>{{ update_user.email }}</span>
+            </div>
+            
+            {{ edit_profile.non_field_errors }}
+            
+            <div class="mb-3">
+                <label class="form-label"><strong>Contact:</strong></label>
+                {{ edit_profile.contact }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><strong>Location:</strong></label>
+                {{ edit_profile.location }}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Profile Picture</label>
+                {% if profile.profile_pic %}
+                    <div class="mb-2">
+                        <img src="{{ profile.profile_pic.url }}" class="img-thumbnail rounded" style="max-height: 150px;">
+                    </div>
+                {% endif %}
+                {{ edit_profile.profile_pic }}
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'profile' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

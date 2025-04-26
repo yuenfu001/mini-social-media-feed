@@ -1,0 +1,19 @@
+<div class="sidebar d-none d-md-block bg-light p-3"
+     style="width: 250px; height: 100vh; position: fixed; top: 70px; left: 0; overflow-y: auto; z-index: 1000;">
+  <h5 class="mb-4">Connections</h5>
+  <ul class="list-group">
+    {% for user in users %}
+      <li class="list-group-item border-0">
+        <i class="bi bi-person me-2"></i>
+        <a href="{% url 'check_profile' user.profile.id %}">
+          {% if user.first_name %}
+            {{ user.first_name }} {{ user.last_name }}
+          {% else %}
+            {{user.username}}
+          {% endif %}
+        </a>
+      </li>
+    
+    {% endfor %}
+  </ul>
+</div>

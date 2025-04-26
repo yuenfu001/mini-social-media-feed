@@ -1,0 +1,18 @@
+<!-- Edit Post Modal -->
+{% extends "base.html" %}
+
+{% block title %}
+  
+{% endblock %}
+
+{% block content %}
+
+  
+    <h2>Edit Post</h2>
+    <form action="" method="post" id="editPostForm">
+      {% csrf_token %}
+      {{ post.as_p }}
+      <button type="submit" class="post-submit-btn">Update Post</button>
+    </form>
+
+{% endblock %}
